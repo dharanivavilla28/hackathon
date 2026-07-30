@@ -1,32 +1,35 @@
 import React, { useState } from 'react';
-import { Mic, MicOff } from './Icons';
+import { Mic, MicOff, Sparkles } from './Icons';
 
 interface InstructionAreaProps {
   prompt: string;
   onChangePrompt: (newPrompt: string) => void;
 }
 
+const ACTION_CHIPS = [
+  { label: '🎨 Change Color', text: 'Change wall color to warm beige and accent color to sage green.' },
+  { label: '🛋️ Add Sofa', text: 'Add a navy blue sofa against the left wall with matching throw pillows.' },
+  { label: '🪟 Add Window', text: 'Add floor-to-ceiling glass windows for natural sunlight.' },
+  { label: '🗑️ Declutter', text: 'De-clutter the space, remove old items and create an open minimalist layout.' },
+  { label: '🌿 Add Plants', text: 'Add tall fiddle-leaf fig plants in the corners for a biophilic feel.' },
+  { label: '💡 Lighting', text: 'Add warm ambient recessed lighting and a modern statement pendant light.' },
+];
+
 export const InstructionArea: React.FC<InstructionAreaProps> = ({
   prompt,
-  onChangePrompt
+  onChangePrompt,
 }) => {
   const [isListening, setIsListening] = useState(false);
+  const [charCount, setCharCount] = useState(prompt.length);
 
-  const quickActionChips = [
-    { label: '🎨 Change Color', text: 'Change wall color to warm beige and accent color to sage.' },
-    { label: '🛋️ Add Furniture', text: 'Add a navy blue sofa left and wooden coffee table center.' },
-    { label: '🪟 Add Window', text: 'Add large sunlit glass windows for natural daylight.' },
-    { label: '🗑️ Remove Item', text: 'Remove unnecessary clutter and open up space.' },
-    { label: '🌿 Add Plants', text: 'Add tall fiddle leaf fig indoor plants in corners.' },
-    { label: '💡 Change Lighting', text: 'Add warm pendant lights and ambient recessed lighting.' }
-  ];
+  const handleChange = (val: string) => {
+    onChangePrompt(val);
+    setCharCount(val.length);
+  };
 
   const handleChipClick = (chipText: string) => {
-    if (!prompt.trim()) {
-      onChangePrompt(chipText);
-    } else {
-      onChangePrompt(`${prompt.trim()} ${chipText}`);
-    }
+    const newPrompt = prompt.trim() ? `${prompt.trim()} ${chipText}` : chipText;
+    handleChange(newPrompt);
   };
 
   const toggleVoiceInput = () => {
@@ -34,8 +37,10 @@ export const InstructionArea: React.FC<InstructionAreaProps> = ({
       if (!isListening) {
         setIsListening(true);
         setTimeout(() => {
-          const appended = prompt ? `${prompt} Add warm ambient lighting and hardwood oak floors.` : 'Add warm ambient lighting and hardwood oak floors.';
-          onChangePrompt(appended);
+          const appended = prompt
+            ? `${prompt} Add warm ambient lighting and hardwood oak floors.`
+            : 'Add warm ambient lighting and hardwood oak floors.';
+          handleChange(appended);
           setIsListening(false);
         }, 2000);
       } else {
@@ -55,7 +60,7 @@ export const InstructionArea: React.FC<InstructionAreaProps> = ({
         recognition.start();
         recognition.onresult = (event: any) => {
           const transcript = event.results[0][0].transcript;
-          onChangePrompt(prompt ? `${prompt} ${transcript}` : transcript);
+          handleChange(prompt ? `${prompt} ${transcript}` : transcript);
           setIsListening(false);
         };
         recognition.onerror = () => setIsListening(false);
@@ -70,56 +75,117 @@ export const InstructionArea: React.FC<InstructionAreaProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+
+      {/* Header */}
       <div>
-        <h3 className="text-xl font-bold text-[#2D3436] dark:text-white font-display">
-          ✏️ Describe Your Redesign
+        <h3 className="text-xl font-extrabold font-display flex items-center gap-2" style={{ color: 'var(--text-dark)' }}>
+          <span
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm"
+            style={{ background: 'linear-gradient(135deg, #FF6B6B, #FF8E53)' }}
+          >
+            ✍️
+          </span>
+          Describe Your Redesign
         </h3>
-        <p className="text-xs text-[#636E72] dark:text-gray-400">
-          Tell us exactly what you want to change
+        <p className="text-sm mt-1 ml-10" style={{ color: 'var(--text-grey)' }}>
+          Be specific about colors, furniture placement, and materials for best results
         </p>
       </div>
 
-      {/* Input Box with Voice Mic Button */}
-      <div className="card-surface p-4 relative border border-purple-100 dark:border-white/10 shadow-sm">
+      {/* Textarea card */}
+      <div
+        className="relative rounded-2xl transition-all"
+        style={{
+          background: 'var(--surface-white)',
+          border: '1.5px solid var(--border-subtle)',
+          boxShadow: 'var(--card-shadow)',
+        }}
+      >
         <textarea
-          rows={4}
+          rows={5}
           value={prompt}
-          onChange={(e) => onChangePrompt(e.target.value)}
-          placeholder="Example: Make walls warm beige. Add a navy blue sofa against the left wall. Put a wooden coffee table in the center. Add a tall plant in the right corner."
-          className="w-full bg-transparent text-[#2D3436] dark:text-white placeholder-gray-400 text-sm focus:outline-none resize-none pr-12"
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder="Example: Make walls warm beige. Add a navy blue velvet sofa against the left wall. Put a wooden coffee table in the center. Add a tall fiddle-leaf fig plant in the right corner. Warm pendant lighting above."
+          className="w-full bg-transparent text-sm resize-none focus:outline-none p-5 pr-16"
+          style={{
+            color: 'var(--text-dark)',
+            minHeight: '130px',
+          }}
         />
 
-        {/* Circular Purple Voice Mic Button */}
-        <button
-          type="button"
-          onClick={toggleVoiceInput}
-          title="🎤 Voice Input"
-          className={`absolute bottom-4 right-4 w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-all ${
-            isListening ? 'bg-red-500 animate-pulse scale-110' : 'bg-[#6C63FF] hover:bg-purple-700'
-          }`}
+        {/* Bottom bar inside textarea card */}
+        <div
+          className="flex items-center justify-between px-4 py-2.5"
+          style={{ borderTop: '1px solid var(--border-subtle)' }}
         >
-          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-        </button>
-      </div>
+          <span className="text-xs" style={{ color: 'var(--text-light)' }}>
+            {charCount > 0 ? `${charCount} characters` : '💡 Tip: Be specific for better results'}
+          </span>
 
-      <p className="text-xs text-[#636E72] dark:text-gray-400">
-        💡 Be specific about colors, furniture placement, and materials
-      </p>
-
-      {/* Quick Action Chips */}
-      <div className="flex flex-wrap gap-2 pt-1">
-        {quickActionChips.map((chip, idx) => (
+          {/* Voice mic button */}
           <button
-            key={idx}
             type="button"
-            onClick={() => handleChipClick(chip.text)}
-            className="px-3.5 py-1.5 rounded-full bg-white dark:bg-white/5 border border-purple-200 dark:border-white/10 text-xs font-semibold text-[#6C63FF] dark:text-purple-300 hover:bg-[#6C63FF] hover:text-white transition-all shadow-sm"
+            onClick={toggleVoiceInput}
+            title="🎤 Voice Input"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-white transition-all"
+            style={{
+              background: isListening
+                ? 'linear-gradient(135deg, #FF6B6B, #FF8E53)'
+                : 'linear-gradient(135deg, #6C63FF, #4ECDC4)',
+              boxShadow: isListening
+                ? '0 4px 15px rgba(255,107,107,0.5)'
+                : '0 4px 15px rgba(108,99,255,0.3)',
+              animation: isListening ? 'pulse-glow 1s ease-in-out infinite' : undefined,
+            }}
           >
-            {chip.label}
+            {isListening ? <MicOff className="w-4.5 h-4.5" style={{ width: '18px', height: '18px' }} /> : <Mic className="w-4.5 h-4.5" style={{ width: '18px', height: '18px' }} />}
           </button>
-        ))}
+        </div>
       </div>
+
+      {/* Voice status */}
+      {isListening && (
+        <div
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold animate-fadeIn"
+          style={{ background: 'rgba(255,107,107,0.1)', border: '1px solid rgba(255,107,107,0.2)', color: '#FF6B6B' }}
+        >
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="w-1 rounded-full bg-current"
+                style={{
+                  height: '16px',
+                  animation: `float ${0.6 + i * 0.15}s ease-in-out infinite alternate`,
+                }}
+              />
+            ))}
+          </div>
+          <span>Listening... Speak your design instructions</span>
+        </div>
+      )}
+
+      {/* Quick-action chips */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--text-grey)' }}>
+          <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--primary-purple)' }} />
+          Quick suggestions — click to add:
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {ACTION_CHIPS.map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleChipClick(chip.text)}
+              className="chip-purple"
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };

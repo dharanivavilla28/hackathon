@@ -1,5 +1,5 @@
-import React from 'react';
-import { Upload, Sparkles, Check, ArrowRight } from './Icons';
+import React, { useState, useRef } from 'react';
+import { Upload, Check, ArrowRight, Sparkles } from './Icons';
 
 export interface SamplePhoto {
   id: string;
@@ -40,6 +40,20 @@ export const SAMPLE_PHOTOS_LIST: SamplePhoto[] = [
   }
 ];
 
+const CATEGORIES = [
+  { key: 'Interior', label: 'Interior', emoji: '🏠', desc: 'Rooms & living spaces' },
+  { key: 'Exterior', label: 'Exterior', emoji: '🏛️', desc: 'Facades & entry' },
+  { key: 'Garden', label: 'Garden', emoji: '🌿', desc: 'Outdoor & patio' },
+  { key: 'Sketch', label: 'Sketch', emoji: '✏️', desc: 'Floor plan or sketch' },
+];
+
+const FEATURE_PILLS = [
+  { icon: '🧠', label: 'Gemini 2.5 Flash' },
+  { icon: '🖼️', label: 'Imagen 4 Ultra' },
+  { icon: '🎬', label: 'Veo 3.1 Video' },
+  { icon: '⚡', label: 'Instant Results' },
+];
+
 interface UploadSectionProps {
   uploadedImage: string | null;
   selectedCategory: string;
@@ -55,179 +69,334 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
   onCategorySelect,
   onFileChange,
   onSampleSelect,
-  onContinue
+  onContinue,
 }) => {
-  const categories = [
-    { key: 'Interior', label: '🏠 Interior' },
-    { key: 'Garden', label: '🌿 Garden' },
-    { key: 'Exterior', label: '🏛️ Exterior' },
-    { key: 'Sketch', label: '✏️ Sketch' }
-  ];
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const syntheticEvent = {
+        target: { files: [file] }
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+      onFileChange(syntheticEvent);
+    }
+  };
 
   return (
-    <div className="space-y-8">
-      
-      {/* HERO SECTION WITH GRADIENT BACKGROUND */}
-      <section className="relative rounded-3xl overflow-hidden p-8 sm:p-12 text-center text-white bg-gradient-purple-teal shadow-xl">
-        <div className="relative z-10 space-y-4 max-w-3xl mx-auto">
-          
-          <h2 className="text-4xl sm:text-5xl font-black font-display tracking-tight text-white drop-shadow-md">
-            🏠 HomeLove AI
-          </h2>
+    <div className="space-y-8 animate-fadeIn">
 
-          <div className="text-lg sm:text-xl font-bold tracking-widest uppercase text-purple-100">
-            AI REDESIGN STUDIO
+      {/* ── HERO BANNER ── */}
+      <section
+        className="relative rounded-3xl overflow-hidden"
+        style={{ minHeight: '280px' }}
+      >
+        {/* Animated gradient background */}
+        <div className="hero-gradient-animated absolute inset-0" />
+        
+        {/* Decorative geometric orbs */}
+        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.6) 0%, transparent 70%)' }} />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full opacity-15"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-32 h-32 rounded-full opacity-10"
+          style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-14 space-y-5">
+          
+          {/* Badge */}
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wider uppercase"
+            style={{ background: 'rgba(255,255,255,0.25)', color: 'white', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)' }}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>AI-POWERED INTERIOR DESIGN STUDIO</span>
           </div>
 
-          <p className="text-base sm:text-lg font-semibold text-white/90">
-            Upload 1 Photo → AI Preserves Structure → 3 Design Options
+          {/* Heading */}
+          <div>
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight font-display drop-shadow-lg">
+              Transform Any Space
+            </h2>
+            <h2 className="text-4xl sm:text-5xl font-extrabold leading-tight font-display"
+              style={{ color: 'rgba(255,255,255,0.85)' }}
+            >
+              in <span style={{ color: '#FFF176', textShadow: '0 0 30px rgba(255,241,118,0.6)' }}>Seconds</span>
+            </h2>
+          </div>
+
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg font-medium max-w-lg" style={{ color: 'rgba(255,255,255,0.85)' }}>
+            Upload 1 photo → AI understands structure → Generates 3 stunning design options
           </p>
 
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold shadow-inner">
-            <Sparkles className="w-4 h-4 text-amber-300 animate-spin" style={{ animationDuration: '6s' }} />
-            <span>✨ Transform Any Space in Seconds ✨</span>
-          </div>
-
-          {/* FOUR PILL BADGES */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 pt-3">
-            {categories.map((cat) => (
+          {/* Feature pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+            {FEATURE_PILLS.map((pill) => (
               <span
-                key={cat.key}
-                className="px-4 py-1.5 rounded-full bg-white text-[#6C63FF] font-bold text-xs shadow-md border border-white/40"
+                key={pill.label}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold"
+                style={{ background: 'rgba(255,255,255,0.2)', color: 'white', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}
               >
-                {cat.label}
+                <span>{pill.icon}</span>
+                <span>{pill.label}</span>
               </span>
             ))}
           </div>
-
         </div>
-
-        {/* Geometric Background Overlay Patterns */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_60%)] pointer-events-none" />
       </section>
 
-      {/* UPLOAD SECTION CARD */}
-      <div className="card-surface p-6 sm:p-8 space-y-6">
-        
-        {/* Dropzone Card */}
-        <div className="relative group cursor-pointer">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onFileChange}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
-          />
+      {/* ── MAIN CONTENT GRID: Upload + Categories ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-          <div className="upload-border-purple rounded-2xl p-8 sm:p-10 text-center transition-all">
+        {/* Upload Area (left / wider) */}
+        <div className="lg:col-span-3 card-surface p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-extrabold font-display" style={{ color: 'var(--text-dark)' }}>
+                Upload Your Space
+              </h3>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-grey)' }}>
+                Drag & drop, click, or pick a sample below
+              </p>
+            </div>
+            {uploadedImage && (
+              <span className="badge-teal flex items-center gap-1">
+                <Check className="w-3 h-3 stroke-[3]" /> Photo Ready
+              </span>
+            )}
+          </div>
+
+          {/* Drop Zone */}
+          <div
+            className={`upload-zone relative rounded-2xl transition-all ${isDragging ? 'dragging' : ''}`}
+            onDragEnter={handleDragEnter}
+            onDragOver={(e) => e.preventDefault()}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={onFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+            />
+
             {uploadedImage ? (
-              <div className="space-y-4">
-                <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-xl max-w-2xl mx-auto border border-purple-200">
-                  <img src={uploadedImage} alt="Uploaded Space" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-xs font-bold gap-2">
-                    <Upload className="w-8 h-8 text-[#4ECDC4] animate-bounce" />
-                    <span>Click or Drag to Change Photo</span>
+              <div className="relative group">
+                <img
+                  src={uploadedImage}
+                  alt="Uploaded Space"
+                  className="w-full rounded-xl object-cover transition-all"
+                  style={{ maxHeight: '300px', minHeight: '200px' }}
+                />
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Upload className="w-6 h-6 text-white" />
                   </div>
-                  <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-[#6C63FF] text-white text-xs font-bold shadow-md flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" /> Photo Uploaded
-                  </div>
+                  <span className="text-white text-sm font-bold">Click to change photo</span>
+                </div>
+                {/* Bottom label */}
+                <div
+                  className="absolute bottom-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                  style={{ background: 'rgba(108,99,255,0.85)', backdropFilter: 'blur(8px)' }}
+                >
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  Photo Loaded
                 </div>
               </div>
             ) : (
-              <div className="py-6 space-y-4">
-                <div className="w-16 h-16 rounded-2xl bg-purple-100 text-[#6C63FF] flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
-                  <Upload className="w-10 h-10" />
+              <div className="flex flex-col items-center justify-center py-12 px-6 text-center space-y-4">
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform animate-float"
+                  style={{ background: 'linear-gradient(135deg, rgba(108,99,255,0.12), rgba(78,205,196,0.12))', border: '1px solid rgba(108,99,255,0.15)' }}
+                >
+                  <Upload className="w-8 h-8" style={{ color: 'var(--primary-purple)' }} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-[#2D3436] dark:text-white font-display">
-                    📸 Click to Upload Your Space Photo
-                  </h3>
-                  <p className="text-xs text-[#636E72] dark:text-gray-400 mt-1">
-                    Drag & drop or click to browse (JPG, PNG, WebP)
+                  <h4 className="text-base font-bold font-display" style={{ color: 'var(--text-dark)' }}>
+                    Drop your photo here
+                  </h4>
+                  <p className="text-sm mt-1" style={{ color: 'var(--text-grey)' }}>
+                    or click anywhere to browse
                   </p>
                 </div>
-                <div className="flex items-center justify-center gap-2 pt-2">
-                  {['JPG', 'PNG', 'WebP', 'MAX 10MB'].map((b, i) => (
-                    <span key={i} className="px-2.5 py-0.5 rounded-md bg-purple-50 dark:bg-white/10 text-[#6C63FF] dark:text-purple-300 text-[10px] font-bold">
-                      {b}
+                <div className="flex items-center gap-2">
+                  {['JPG', 'PNG', 'WebP', 'HEIC'].map((fmt) => (
+                    <span
+                      key={fmt}
+                      className="px-2 py-0.5 rounded text-[11px] font-bold"
+                      style={{ background: 'var(--bg-secondary)', color: 'var(--text-grey)', border: '1px solid var(--border-subtle)' }}
+                    >
+                      {fmt}
                     </span>
                   ))}
+                  <span className="text-[11px]" style={{ color: 'var(--text-light)' }}>up to 10 MB</span>
                 </div>
+                <button
+                  type="button"
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-white pointer-events-none"
+                  style={{ background: 'linear-gradient(135deg, #6C63FF, #4ECDC4)', boxShadow: '0 4px 15px rgba(108,99,255,0.3)' }}
+                >
+                  Browse Files
+                </button>
               </div>
             )}
           </div>
+
+          {/* Format info */}
+          <p className="text-center text-xs" style={{ color: 'var(--text-light)' }}>
+            🔒 Your images are processed securely and never stored
+          </p>
         </div>
 
-        {/* SPACE CATEGORY SELECTOR */}
-        <div className="space-y-3 pt-2">
-          <label className="text-sm font-bold text-[#2D3436] dark:text-white flex items-center gap-2">
-            <span>Select Space Category:</span>
-          </label>
+        {/* Right: Category + Sample gallery */}
+        <div className="lg:col-span-2 space-y-5">
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {categories.map((cat) => {
-              const isSel = selectedCategory === cat.key;
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => onCategorySelect(cat.key)}
-                  className={`py-3 px-4 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-sm ${
-                    isSel
-                      ? 'bg-[#6C63FF] text-white shadow-purple-500/30 shadow-md ring-2 ring-[#6C63FF]'
-                      : 'bg-white dark:bg-white/5 text-[#2D3436] dark:text-gray-200 border border-purple-100 dark:border-white/10 hover:border-[#6C63FF]'
-                  }`}
-                >
-                  <span>{cat.label}</span>
-                  {isSel && <Check className="w-4 h-4 stroke-[3]" />}
-                </button>
-              );
-            })}
+          {/* Category Selector */}
+          <div className="card-surface p-5 space-y-4">
+            <div>
+              <h3 className="text-base font-extrabold font-display" style={{ color: 'var(--text-dark)' }}>
+                Space Category
+              </h3>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-grey)' }}>
+                What type of space is this?
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {CATEGORIES.map((cat) => {
+                const isSel = selectedCategory === cat.key;
+                return (
+                  <button
+                    key={cat.key}
+                    type="button"
+                    onClick={() => onCategorySelect(cat.key)}
+                    className="relative p-3 rounded-xl text-left transition-all duration-200 group"
+                    style={{
+                      background: isSel ? 'linear-gradient(135deg, rgba(108,99,255,0.12), rgba(78,205,196,0.08))' : 'var(--bg-secondary)',
+                      border: isSel ? '2px solid var(--primary-purple)' : '1.5px solid var(--border-subtle)',
+                      boxShadow: isSel ? '0 4px 15px rgba(108,99,255,0.2)' : undefined,
+                    }}
+                  >
+                    <span className="text-xl mb-1 block">{cat.emoji}</span>
+                    <span
+                      className="text-xs font-bold block"
+                      style={{ color: isSel ? 'var(--primary-purple)' : 'var(--text-dark)' }}
+                    >
+                      {cat.label}
+                    </span>
+                    <span className="text-[10px] block" style={{ color: 'var(--text-grey)' }}>
+                      {cat.desc}
+                    </span>
+                    {isSel && (
+                      <div
+                        className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center"
+                        style={{ background: 'var(--primary-purple)' }}
+                      >
+                        <Check className="w-3 h-3 text-white stroke-[3]" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Sample Gallery */}
+          <div className="card-surface p-5 space-y-4">
+            <div>
+              <h3 className="text-base font-extrabold font-display" style={{ color: 'var(--text-dark)' }}>
+                Try a Sample
+              </h3>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-grey)' }}>
+                Click to instantly load an example photo
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {SAMPLE_PHOTOS_LIST.map((sample) => {
+                const isActive = uploadedImage === sample.url;
+                return (
+                  <div
+                    key={sample.id}
+                    onClick={() => onSampleSelect(sample)}
+                    className="relative rounded-xl overflow-hidden cursor-pointer group transition-all duration-200"
+                    style={{
+                      border: isActive ? '2.5px solid var(--primary-purple)' : '1.5px solid var(--border-subtle)',
+                      boxShadow: isActive ? '0 4px 15px rgba(108,99,255,0.25)' : undefined,
+                    }}
+                  >
+                    <img
+                      src={sample.url}
+                      alt={sample.name}
+                      className="w-full h-20 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div
+                      className="px-2 py-1.5 flex items-center gap-1"
+                      style={{ background: 'var(--surface-white)', borderTop: '1px solid var(--border-subtle)' }}
+                    >
+                      <span className="text-xs">{sample.icon}</span>
+                      <span className="text-[11px] font-bold" style={{ color: 'var(--text-dark)' }}>
+                        {sample.name}
+                      </span>
+                    </div>
+                    {isActive && (
+                      <div
+                        className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center"
+                        style={{ background: 'var(--primary-purple)' }}
+                      >
+                        <Check className="w-3 h-3 text-white stroke-[3]" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* QUICK EXAMPLE GALLERY */}
-        <div className="space-y-3 pt-2">
-          <label className="text-sm font-bold text-[#2D3436] dark:text-white flex items-center gap-1.5">
-            <span>🔥 Quick Examples</span>
-          </label>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {SAMPLE_PHOTOS_LIST.map((sample) => (
-              <div
-                key={sample.id}
-                onClick={() => onSampleSelect(sample)}
-                className={`card-surface p-2.5 rounded-xl cursor-pointer transition-all border flex flex-col items-center text-center gap-2 group ${
-                  uploadedImage === sample.url
-                    ? 'border-[#6C63FF] ring-2 ring-[#6C63FF]/30 bg-purple-50/50 dark:bg-white/10'
-                    : 'border-purple-100 dark:border-white/10 hover:border-[#6C63FF]'
-                }`}
-              >
-                <img
-                  src={sample.url}
-                  alt={sample.name}
-                  className="w-full h-24 rounded-lg object-cover group-hover:scale-105 transition-transform"
-                />
-                <span className="text-xs font-bold text-[#2D3436] dark:text-white">
-                  {sample.icon} {sample.name}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CONTINUE TO DESIGN STUDIO BUTTON */}
-        <div className="pt-4 text-center">
-          <button
-            type="button"
-            onClick={onContinue}
-            disabled={!uploadedImage}
-            className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-purple-teal text-white font-extrabold text-base flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mx-auto"
-          >
-            <span>🚀 Continue to Design Studio</span>
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </div>
-
+      {/* ── CONTINUE BUTTON ── */}
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={onContinue}
+          disabled={!uploadedImage}
+          className="group relative inline-flex items-center gap-3 px-10 py-4 rounded-2xl text-white font-extrabold text-base transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{
+            background: uploadedImage
+              ? 'linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%)'
+              : 'rgba(108,99,255,0.5)',
+            boxShadow: uploadedImage ? '0 8px 30px rgba(108,99,255,0.4)' : undefined,
+          }}
+          onMouseEnter={(e) => {
+            if (uploadedImage) {
+              (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px) scale(1.02)';
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 12px 40px rgba(108,99,255,0.5)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.transform = '';
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = uploadedImage ? '0 8px 30px rgba(108,99,255,0.4)' : '';
+          }}
+        >
+          <span>🚀 Continue to Design Studio</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </button>
       </div>
 
     </div>

@@ -7,6 +7,7 @@ export interface StylePresetItem {
   icon: string;
   colors: string[];
   desc: string;
+  tag: string;
 }
 
 export const STYLE_PRESETS_DATA: StylePresetItem[] = [
@@ -15,43 +16,49 @@ export const STYLE_PRESETS_DATA: StylePresetItem[] = [
     name: 'Japandi Organic',
     icon: '🏯',
     colors: ['#F5F0E8', '#EFE6D5', '#D4C5A9', '#708090', '#2C2C2C'],
-    desc: 'Minimalist Japanese + Scandinavian warmth'
+    desc: 'Minimalist Japanese + Scandinavian warmth with natural materials',
+    tag: 'Most Popular',
   },
   {
     id: 'scandinavian',
     name: 'Nordic Light',
     icon: '❄️',
     colors: ['#FFFFFF', '#E8E0D5', '#C4B5A0', '#B0C4DE', '#F5F5F5'],
-    desc: 'Light, airy spaces with natural timber'
+    desc: 'Light, airy spaces with natural timber and cozy textures',
+    tag: 'Bright & Airy',
   },
   {
     id: 'industrial',
     name: 'Industrial Loft',
     icon: '🏗️',
     colors: ['#2C2C2C', '#8B4513', '#D4C5A9', '#1A1A1A', '#B22222'],
-    desc: 'Exposed brick, matte iron & leather'
+    desc: 'Exposed brick, raw concrete, matte iron & aged leather',
+    tag: 'Edgy',
   },
   {
     id: 'modern_luxury',
-    name: 'Modern Luxury Marble',
+    name: 'Modern Luxury',
     icon: '✨',
     colors: ['#FFFFFF', '#D4AF37', '#C0C0C0', '#708090', '#F5F5F5'],
-    desc: 'Polished marble with brass accents'
+    desc: 'Polished marble surfaces with brushed gold & brass accents',
+    tag: 'Premium',
   },
   {
     id: 'warm_organic',
-    name: 'Warm Terracotta & Clay',
+    name: 'Terracotta & Clay',
     icon: '🧱',
     colors: ['#E2725B', '#C49A6C', '#8B7D6B', '#D2691E', '#F4A460'],
-    desc: 'Earthy plaster & lime wash textures'
+    desc: 'Earthy plaster, lime wash textures & warm Mediterranean tones',
+    tag: 'Earthy',
   },
   {
     id: 'biophilic',
     name: 'Biophilic Sanctuary',
     icon: '🌿',
     colors: ['#2E7D32', '#81C784', '#A5D6A7', '#6B8E23', '#F5F5F5'],
-    desc: 'Indoor nature, living walls & sunlight'
-  }
+    desc: 'Indoor nature, living walls, raw wood & abundant sunlight',
+    tag: 'Nature',
+  },
 ];
 
 interface StylePresetCardsProps {
@@ -61,16 +68,22 @@ interface StylePresetCardsProps {
 
 export const StylePresetCards: React.FC<StylePresetCardsProps> = ({
   selectedPreset,
-  onSelectPreset
+  onSelectPreset,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <h3 className="text-xl font-bold text-[#2D3436] dark:text-white font-display flex items-center gap-2">
-          <span>🎨 Select Your Style</span>
+        <h3 className="text-xl font-extrabold font-display flex items-center gap-2" style={{ color: 'var(--text-dark)' }}>
+          <span
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-sm"
+            style={{ background: 'linear-gradient(135deg, #6C63FF, #4ECDC4)' }}
+          >
+            🎨
+          </span>
+          Select Your Design Style
         </h3>
-        <p className="text-xs text-[#636E72] dark:text-gray-400">
-          Choose a design aesthetic for your space
+        <p className="text-sm mt-1 ml-10" style={{ color: 'var(--text-grey)' }}>
+          Choose the aesthetic that best matches your vision
         </p>
       </div>
 
@@ -81,39 +94,80 @@ export const StylePresetCards: React.FC<StylePresetCardsProps> = ({
             <div
               key={preset.id}
               onClick={() => onSelectPreset(preset.id)}
-              className={`card-surface p-5 rounded-2xl cursor-pointer transition-all border relative flex flex-col justify-between ${
-                isSelected
-                  ? 'border-[#6C63FF] ring-2 ring-[#6C63FF] shadow-lg scale-[1.02] bg-purple-50/30 dark:bg-white/10'
-                  : 'border-purple-100 dark:border-white/10 hover:border-[#6C63FF]'
-              }`}
+              className="preset-card relative rounded-2xl p-5 cursor-pointer"
+              style={{
+                background: isSelected
+                  ? 'linear-gradient(135deg, rgba(108,99,255,0.06), rgba(78,205,196,0.04))'
+                  : 'var(--surface-white)',
+                border: isSelected
+                  ? '2px solid var(--primary-purple)'
+                  : '1.5px solid var(--border-subtle)',
+                boxShadow: isSelected
+                  ? '0 8px 30px rgba(108,99,255,0.2)'
+                  : 'var(--card-shadow)',
+              }}
             >
-              <div className="flex items-start justify-between">
-                <div className="text-3xl mb-2">{preset.icon}</div>
+              {/* Tag Badge */}
+              <div className="absolute top-3.5 right-3.5 flex items-center gap-1">
                 {isSelected && (
-                  <span className="w-6 h-6 rounded-full bg-[#6C63FF] text-white flex items-center justify-center font-bold shadow-md">
-                    <Check className="w-4 h-4 stroke-[3]" />
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center"
+                    style={{ background: 'var(--primary-purple)' }}
+                  >
+                    <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                  </div>
+                )}
+                {!isSelected && (
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                    style={{
+                      background: 'rgba(108,99,255,0.08)',
+                      color: 'var(--primary-purple)',
+                      border: '1px solid rgba(108,99,255,0.15)',
+                    }}
+                  >
+                    {preset.tag}
                   </span>
                 )}
               </div>
 
-              <div>
-                <h4 className="font-extrabold text-base text-[#2D3436] dark:text-white font-display">
-                  {preset.name}
-                </h4>
-                <p className="text-xs text-[#636E72] dark:text-gray-400 mt-1 mb-3">
-                  {preset.desc}
-                </p>
-              </div>
+              {/* Icon */}
+              <div className="text-3xl mb-3">{preset.icon}</div>
 
-              {/* 5 Color Swatch Circles */}
-              <div className="flex items-center gap-1.5 pt-2 border-t border-purple-100 dark:border-white/10">
+              {/* Title */}
+              <h4
+                className="text-base font-extrabold font-display mb-1"
+                style={{ color: isSelected ? 'var(--primary-purple)' : 'var(--text-dark)' }}
+              >
+                {preset.name}
+              </h4>
+
+              {/* Description */}
+              <p className="text-xs leading-relaxed mb-4" style={{ color: 'var(--text-grey)' }}>
+                {preset.desc}
+              </p>
+
+              {/* Color Swatches */}
+              <div
+                className="flex items-center gap-1.5 pt-3"
+                style={{ borderTop: '1px solid var(--border-subtle)' }}
+              >
+                <span className="text-[10px] font-semibold mr-1" style={{ color: 'var(--text-light)' }}>Palette</span>
                 {preset.colors.map((c, i) => (
-                  <span
+                  <div
                     key={i}
-                    className="w-5 h-5 rounded-full border border-gray-300 dark:border-white/20 shadow-sm shrink-0"
-                    style={{ backgroundColor: c }}
+                    className="relative group/swatch"
                     title={c}
-                  />
+                  >
+                    <span
+                      className="block w-5 h-5 rounded-full border transition-transform group-hover/swatch:scale-125"
+                      style={{
+                        backgroundColor: c,
+                        borderColor: 'rgba(0,0,0,0.1)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                      }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

@@ -1,111 +1,517 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   CSS CUSTOM PROPERTIES – HomeLove AI Design System
+   ============================================================ */
 :root {
-  --bg-main: #F8F9FE;
+  --bg-main: #F5F6FA;
+  --bg-secondary: #ECEEF6;
   --surface-white: #FFFFFF;
+  --surface-elevated: #FAFBFF;
   --primary-purple: #6C63FF;
+  --primary-purple-light: #8B84FF;
   --primary-teal: #4ECDC4;
   --primary-coral: #FF6B6B;
-  --text-dark: #2D3436;
+  --text-dark: #1A1D2E;
   --text-grey: #636E72;
-  --card-shadow: 0 10px 30px rgba(108, 99, 255, 0.12);
-  --card-shadow-hover: 0 15px 35px rgba(108, 99, 255, 0.22);
+  --text-light: #B2BEC3;
+  --border-subtle: rgba(108, 99, 255, 0.10);
+  --border-medium: rgba(108, 99, 255, 0.20);
+  --card-shadow: 0 4px 24px rgba(108, 99, 255, 0.08);
+  --card-shadow-hover: 0 12px 40px rgba(108, 99, 255, 0.18);
+  --card-shadow-deep: 0 20px 60px rgba(108, 99, 255, 0.15);
+  --glow-purple: 0 0 30px rgba(108, 99, 255, 0.35);
+  --glow-teal: 0 0 30px rgba(78, 205, 196, 0.35);
+  --gradient-main: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
+  --gradient-soft: linear-gradient(135deg, #EEF0FF 0%, #E8FBF9 100%);
+  --gradient-hero: linear-gradient(135deg, #6C63FF 0%, #8B7DFF 30%, #4ECDC4 100%);
 }
 
 .dark {
-  --bg-main: #0B0D13;
-  --surface-white: #161A23;
-  --primary-purple: #818CF8;
-  --primary-teal: #2DD4BF;
-  --primary-coral: #F87171;
-  --text-dark: #F3F4F6;
+  --bg-main: #0B0D15;
+  --bg-secondary: #111420;
+  --surface-white: #161B2E;
+  --surface-elevated: #1C2138;
+  --primary-purple: #7C74FF;
+  --primary-purple-light: #9D97FF;
+  --primary-teal: #3BC5BC;
+  --primary-coral: #FF7B7B;
+  --text-dark: #F0F2FF;
   --text-grey: #9CA3AF;
-  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  --card-shadow-hover: 0 15px 35px rgba(129, 140, 248, 0.25);
+  --text-light: #6B7280;
+  --border-subtle: rgba(124, 116, 255, 0.12);
+  --border-medium: rgba(124, 116, 255, 0.25);
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover: 0 12px 40px rgba(124, 116, 255, 0.20);
+  --card-shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --glow-purple: 0 0 40px rgba(124, 116, 255, 0.4);
+  --glow-teal: 0 0 40px rgba(59, 197, 188, 0.4);
+  --gradient-soft: linear-gradient(135deg, #1C2138 0%, #162230 100%);
+}
+
+/* ============================================================
+   BASE RESET & TYPOGRAPHY
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  padding: 0;
   background-color: var(--bg-main);
   color: var(--text-dark);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, .font-display {
+h1, h2, h3, h4, h5, .font-display {
   font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Custom Soft Purple Shadow Cards */
+/* ============================================================
+   CARD COMPONENTS
+   ============================================================ */
 .card-surface {
   background-color: var(--surface-white);
   border-radius: 1.25rem;
   box-shadow: var(--card-shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(108, 99, 255, 0.1);
+  border: 1px solid var(--border-subtle);
 }
 
 .card-surface:hover {
   box-shadow: var(--card-shadow-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
-/* Gradient Utilities */
+.card-elevated {
+  background: var(--surface-elevated);
+  border-radius: 1.25rem;
+  box-shadow: var(--card-shadow-deep);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 1.25rem;
+  box-shadow: var(--card-shadow);
+}
+
+.dark .glass-card {
+  background: rgba(22, 27, 46, 0.8);
+  border-color: rgba(124, 116, 255, 0.15);
+}
+
+/* ============================================================
+   GRADIENT UTILITIES
+   ============================================================ */
 .bg-gradient-purple-teal {
-  background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
+  background: var(--gradient-main);
+}
+
+.bg-gradient-hero {
+  background: var(--gradient-hero);
+}
+
+.bg-gradient-soft {
+  background: var(--gradient-soft);
 }
 
 .text-gradient-purple {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-hero {
   background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Custom Dashed Upload Border */
-.upload-border-purple {
-  border: 2.5px dashed #6C63FF;
-  background: rgba(108, 99, 255, 0.03);
-  transition: all 0.3s ease;
+/* ============================================================
+   BUTTON STYLES
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 0.875rem;
+  background: var(--gradient-main);
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.35);
+  position: relative;
+  overflow: hidden;
 }
 
-.upload-border-purple:hover {
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(108, 99, 255, 0.45);
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.875rem;
+  background: transparent;
+  color: var(--primary-purple);
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: 2px solid var(--primary-purple);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-outline:hover {
   background: rgba(108, 99, 255, 0.08);
-  border-color: #4ECDC4;
-  box-shadow: 0 10px 25px rgba(108, 99, 255, 0.15);
+  transform: translateY(-1px);
 }
 
-/* Shimmer Loader */
+/* ============================================================
+   UPLOAD AREA
+   ============================================================ */
+.upload-zone {
+  border: 2px dashed var(--primary-purple);
+  border-radius: 1.25rem;
+  background: rgba(108, 99, 255, 0.02);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.upload-zone:hover {
+  background: rgba(108, 99, 255, 0.05);
+  border-color: var(--primary-teal);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.08);
+}
+
+.upload-zone.dragging {
+  background: rgba(108, 99, 255, 0.08);
+  border-color: var(--primary-teal);
+  box-shadow: 0 0 0 6px rgba(78, 205, 196, 0.12);
+  transform: scale(1.01);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(108, 99, 255, 0.3); }
+  50% { box-shadow: 0 0 35px rgba(108, 99, 255, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+.animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-fadeInScale { animation: fadeInScale 0.4s ease-out forwards; }
+.animate-slideInRight { animation: slideInRight 0.4s ease-out forwards; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* ============================================================
+   SHIMMER LOADER
+   ============================================================ */
 .shimmer-loader {
-  background: linear-gradient(90deg, rgba(108,99,255,0.05) 25%, rgba(78,205,196,0.15) 50%, rgba(108,99,255,0.05) 75%);
+  background: linear-gradient(
+    90deg,
+    rgba(108, 99, 255, 0.04) 0%,
+    rgba(78, 205, 196, 0.12) 50%,
+    rgba(108, 99, 255, 0.04) 100%
+  );
   background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.dark .shimmer-loader {
+  background: linear-gradient(
+    90deg,
+    rgba(124, 116, 255, 0.08) 0%,
+    rgba(59, 197, 188, 0.15) 50%,
+    rgba(124, 116, 255, 0.08) 100%
+  );
+  background-size: 200% 100%;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-main);
+/* ============================================================
+   HERO GRADIENT ANIMATED
+   ============================================================ */
+.hero-gradient-animated {
+  background: linear-gradient(-45deg, #6C63FF, #8B7DFF, #4ECDC4, #3DBDB5);
+  background-size: 400% 400%;
+  animation: gradient-shift 8s ease infinite;
 }
 
+/* ============================================================
+   STEP INDICATOR
+   ============================================================ */
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-purple), transparent);
+  max-width: 60px;
+  border-radius: 1px;
+}
+
+.step-connector.completed {
+  background: linear-gradient(90deg, var(--primary-purple), var(--primary-teal));
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  background: rgba(108, 99, 255, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary-purple); }
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: rgba(108, 99, 255, 0.2);
+  color: var(--text-dark);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #6C63FF;
+/* ============================================================
+   INPUT STYLES
+   ============================================================ */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-dark);
+  font-size: 0.875rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--primary-purple);
+  background: var(--surface-white);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.12);
+}
+
+.input-field::placeholder {
+  color: var(--text-light);
+}
+
+/* ============================================================
+   BADGE STYLES
+   ============================================================ */
+.badge-purple {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(108, 99, 255, 0.1);
+  color: var(--primary-purple);
+  font-weight: 700;
+  font-size: 0.7rem;
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  white-space: nowrap;
+}
+
+.badge-teal {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(78, 205, 196, 0.1);
+  color: var(--primary-teal);
+  font-weight: 700;
+  font-size: 0.7rem;
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  white-space: nowrap;
+}
+
+.badge-coral {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 107, 107, 0.1);
+  color: var(--primary-coral);
+  font-weight: 700;
+  font-size: 0.7rem;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   STYLE PRESET CARD HOVER EFFECTS
+   ============================================================ */
+.preset-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.preset-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.preset-card.selected {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* ============================================================
+   BEFORE-AFTER SLIDER
+   ============================================================ */
+.slider-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: white;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  cursor: ew-resize;
+  z-index: 10;
+}
+
+.slider-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+/* ============================================================
+   CHIP / TAG PILL
+   ============================================================ */
+.chip-purple {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(108, 99, 255, 0.3);
+  color: var(--primary-purple);
+  background: rgba(108, 99, 255, 0.06);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip-purple:hover {
+  background: var(--primary-purple);
+  color: white;
+  border-color: var(--primary-purple);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   NUMBER BADGE (Step Circles)
+   ============================================================ */
+.step-circle-active {
+  background: var(--gradient-main);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
+}
+
+.step-circle-done {
+  background: var(--primary-teal);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+}
+
+.step-circle-idle {
+  background: var(--bg-secondary);
+  color: var(--text-grey);
+  border: 2px solid var(--border-subtle);
 }
