@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #F8F9FE;
+  --surface-white: #FFFFFF;
+  --primary-purple: #6C63FF;
+  --primary-teal: #4ECDC4;
+  --primary-coral: #FF6B6B;
+  --text-dark: #2D3436;
+  --text-grey: #636E72;
+  --card-shadow: 0 10px 30px rgba(108, 99, 255, 0.12);
+  --card-shadow-hover: 0 15px 35px rgba(108, 99, 255, 0.22);
+}
+
+.dark {
+  --bg-main: #0B0D13;
+  --surface-white: #161A23;
+  --primary-purple: #818CF8;
+  --primary-teal: #2DD4BF;
+  --primary-coral: #F87171;
+  --text-dark: #F3F4F6;
+  --text-grey: #9CA3AF;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --card-shadow-hover: 0 15px 35px rgba(129, 140, 248, 0.25);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Soft Purple Shadow Cards */
+.card-surface {
+  background-color: var(--surface-white);
+  border-radius: 1.25rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(108, 99, 255, 0.1);
+}
+
+.card-surface:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Gradient Utilities */
+.bg-gradient-purple-teal {
+  background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #6C63FF 0%, #4ECDC4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Dashed Upload Border */
+.upload-border-purple {
+  border: 2.5px dashed #6C63FF;
+  background: rgba(108, 99, 255, 0.03);
+  transition: all 0.3s ease;
+}
+
+.upload-border-purple:hover {
+  background: rgba(108, 99, 255, 0.08);
+  border-color: #4ECDC4;
+  box-shadow: 0 10px 25px rgba(108, 99, 255, 0.15);
+}
+
+/* Shimmer Loader */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-loader {
+  background: linear-gradient(90deg, rgba(108,99,255,0.05) 25%, rgba(78,205,196,0.15) 50%, rgba(108,99,255,0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6C63FF;
+}
